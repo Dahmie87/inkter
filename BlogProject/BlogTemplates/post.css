@@ -1,0 +1,9 @@
+body{
+     background-color: rgba(209, 195, 195, 0.24);
+}
+p{
+    font-size: 15px;
+}
+p.content{
+    font-size: 1.5em;
+}

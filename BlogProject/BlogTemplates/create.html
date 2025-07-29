@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create your post here</title>
+    <link rel="stylesheet" href="{% static 'create.css' %}" />
+  </head>
+  <body>
+    <form action="create" method="post">
+      {% csrf_token %}
+      <p>TITLE:</p>
+      <input
+        type="text"
+        name="newtitle"
+        placeholder="enter the title here"
+      /><br />
+      <p>AUTHOR:</p>
+      <input
+        type="text"
+        name="writer"
+        placeholder="enter the name here"
+      /><br />
+
+      <textarea name="postcreated" placeholder="Write your post here"></textarea
+      ><br />
+      <button type="submit">create post</button>
+    </form>
+  </body>
+</html>

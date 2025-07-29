@@ -1,0 +1,8 @@
+from django.db import models
+
+# Create your models here.
+class post(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.CharField(max_length=100000000)
+    author = models.CharField(max_length=100)
+    time = models.CharField(max_length=30)

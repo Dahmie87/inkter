@@ -1,0 +1,27 @@
+body{
+    /* background-color: aliceblue; */
+     background-color: rgba(209, 195, 195, 0.24);
+     text-align: center;    
+}
+textarea{
+    height: 300px;
+    width: 90%;
+    max-width: 500px;
+    margin-top: 1em;;
+}
+input{
+    height: 30px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 1em;
+    border: 1px solid black;
+}
+
+button{
+    background-color: rgb(2, 104, 187);
+    color: white;
+    border: none;
+    padding: 1em 1.1em;
+    font-size: 1em;
+    border-radius: 1.7em;
+}
