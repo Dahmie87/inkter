@@ -37,7 +37,7 @@
 <body>
         <header>
       <img src="{% static 'menu.svg' %}" />
-      <h1><span>ink</span>ter!</h1>
+      <img src="{% static 'mylogo.png' %}" id="logo" />
       <img src="{% static 'search.svg' %}" />
     </header>
 
@@ -50,7 +50,7 @@
         href="http://127.0.0.1:8000/post/{{post.id}}"
         style="text-decoration: none; color: black"
       >
-        <img id="postimg" src="{% static 'postpic.jfif' %}" />
+        <img id=postimg src="{% static post.picture %}" />
         <p class="posthead">{{post.title |truncatewords:7}}</p>
         <p class="content">
          {{post.content|truncatewords:14}} 
