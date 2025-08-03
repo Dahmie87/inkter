@@ -55,5 +55,5 @@
 
 # print(when())
 from datetime import datetime
-current_time = datetime.now().time()
-print(current_time)
+current_time = datetime.now()
+print(type(current_time))

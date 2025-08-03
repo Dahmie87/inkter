@@ -22,8 +22,8 @@ def home(request):
 
 def postpage(request, ID):
     page = post.objects.get(id=ID)
-
-    return render(request, 'post.html', {'page': page})
+    postyear = page.time.year
+    return render(request, 'post.html', {'page': page, "postyear": postyear})
 
 
 def create(request):
@@ -34,7 +34,7 @@ def create(request):
         new_post = request.POST.get("postcreated")
         new_title = request.POST.get("newtitle")
         writer = request.POST.get("writer")
-        time_made = datetime.now().time()
+        time_made = datetime.now()
         tagname = request.POST.get("tag")
         if tagname == "tech":
             imgname = random.choice(techimglist)
@@ -53,3 +53,4 @@ def create(request):
 
         post.objects.create(title=new_title, content=new_post,
                             author=writer, time=time_made, picture=imgname+".jpg")
+        return render(request, "ready.html", {'post_id': post.id})
