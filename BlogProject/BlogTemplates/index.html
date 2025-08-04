@@ -16,12 +16,12 @@
     </header>
 
     <main class="container">
-      <div class="btncreate"><a href="http://127.0.0.1:8000/create">+</a></div>
+      <div class="btncreate"><a href="{% url 'create' %}">+</a></div>
       <side class="profile"></side>
        {% for post in posts reversed %}
       <div class="posts">
         <a
-        href="http://inkter.onrender.com/post/{{post.id}}"
+        href="{% url 'post-full' post.id %}"
         style="text-decoration: none; color: black"
       >
         <img id=postimg src="{% static post.picture %}" />
