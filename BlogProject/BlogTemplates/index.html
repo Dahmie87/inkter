@@ -25,7 +25,7 @@
         style="text-decoration: none; color: black"
       >
         <img id=postimg src="{% static post.picture %}" />
-        <p class="posthead">{{post.title |truncatewords:6}}</p>
+        <p class="posthead">{{post.title}}</p>
         <p class="content">
          {{post.content|truncatewords:11}} 
         </p>
