@@ -25,9 +25,9 @@
         style="text-decoration: none; color: black"
       >
         <img id=postimg src="{% static post.picture %}" />
-        <p class="posthead">{{post.title |truncatewords:7}}</p>
+        <p class="posthead">{{post.title |truncatewords:6}}</p>
         <p class="content">
-         {{post.content|truncatewords:14}} 
+         {{post.content|truncatewords:11}} 
         </p>
         <p class="author">
           <span class="time">{{post.author}}</span> | {{post.time|timesince}} ago
@@ -36,7 +36,7 @@
       </div>
       {% endfor %}
  <footer>
-    <p>&copy; 2023 Inkter for Authors and Everyone</p>
+    <p>&copy; 2025 Inkter for Authors and Everyone</p>
   </footer>
 </body>
 </html>
