@@ -20,3 +20,10 @@ div{
     padding: 1em  1em;
     border-radius: 30px;
 }
+a{
+    color: white;
+    text-decoration: none;
+}
+second{
+    background-color: purple;
+}

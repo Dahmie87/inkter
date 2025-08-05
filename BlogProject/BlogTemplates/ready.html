@@ -11,12 +11,15 @@
     <h1>Your post has been successfully uploaded</h1>
     <div>
       <div class="btns">
-        <a href="{% url 'post-full' post.id %}">View your post here</a>
+        <a href="{% url 'post-full' post_id %}">View your post here</a>
       </div>
       <p>or</p>
-      <div class="btns">
+      <div class="btns" id="second">
         <a href="{% url 'create' %}">Create another post</a>
       </div>
     </div>
+    <footer>
+      <p>&copy; 2023 Inkter for Authors and Everyone</p>
+    </footer>
   </body>
 </html>

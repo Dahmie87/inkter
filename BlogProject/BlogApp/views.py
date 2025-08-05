@@ -51,6 +51,6 @@ def create(request):
         elif tagname == "food":
             imgname = random.choice(foodimglist)
 
-        post.objects.create(title=new_title, content=new_post,
-                            author=writer, time=time_made, picture=imgname+".jpg")
-        return render(request, "ready.html", {'post_id': post.id})
+        new_post = post.objects.create(title=new_title, content=new_post,
+                                       author=writer, time=time_made, picture=imgname+".jpg")
+        return render(request, "ready.html", {'post_id': new_post.id})
