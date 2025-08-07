@@ -22,8 +22,8 @@ def home(request):
 
 def postpage(request, ID):
     page = post.objects.get(id=ID)
-    postyear = page.time.year
-    return render(request, 'post.html', {'page': page, "postyear": postyear})
+
+    return render(request, 'post.html', {'page': page})
 
 
 def create(request):

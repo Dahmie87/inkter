@@ -9,6 +9,8 @@ textarea{
     width: 90%;
     max-width: 500px;
     margin-top: 1em;;
+    font-family:Calibri;
+    font-size: 20px;
 }
 input{
     height: 30px;

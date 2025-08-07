@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'post.css' %}" />
   </head>
-  <h1 class="posthead">{{page.title}}</h1>
+    <header>
+      <img src="{% static 'menu.svg' %}" class="icons"/>
+     <div id="logo-contain"> <img src="{% static 'mylogo3.png' %}" id="logo" /></div>
+      <img src="{% static 'search.svg' %}" class="icons"/>
+    </header>
   <body>
+
+  <h1 class="posthead">{{page.title}}</h1>
     <img src="{% static page.picture %}" alt="Post Image" class="post-image" />
   <p class="author">
     {{page.author}}<span class="time"> | {{page.time|timesince}} ago </span>
-      <p class="content">{{page.content}}</p>
+      <p ><pre class="content">{{page.content}}</pre></p>
 
   </p>
   </body>
