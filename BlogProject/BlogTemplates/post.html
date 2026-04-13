@@ -1,27 +1,555 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>{{page.title}}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'post.css' %}" />
-  </head>
-    <header>
-      <img src="{% static 'menu.svg' %}" class="icons"/>
-     <div id="logo-contain"> <img src="{% static 'mylogo3.png' %}" id="logo" /></div>
-      <img src="{% static 'search.svg' %}" class="icons"/>
+
+{% block title %}{{ page.title }} - Inkter{% endblock %}
+
+{% block extra_css %}
+<style>
+    .post-detail-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+
+    /* Article Header */
+    .article-header {
+        margin-bottom: 3rem;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .article-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 3rem;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        color: var(--primary);
+    }
+
+    body.dark-mode .article-title {
+        color: #f9fafb;
+    }
+
+    .article-meta {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+    body.dark-mode .article-meta {
+        border-bottom-color: #374151;
+    }
+
+    .author-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .author-avatar-large {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .author-details h3 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1rem;
+        color: var(--primary);
+    }
+
+    body.dark-mode .author-details h3 {
+        color: #f9fafb;
+    }
+
+    .author-details p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
+    body.dark-mode .author-details p {
+        color: #9ca3af;
+    }
+
+    .article-stats {
+        display: flex;
+        gap: 2rem;
+        margin-left: auto;
+        font-size: 0.9rem;
+        color: #6b7280;
+    }
+
+    body.dark-mode .article-stats {
+        color: #9ca3af;
+    }
+
+    /* Article Image */
+    .article-image {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        border-radius: 0.75rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark-mode .article-image {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Article Content */
+    .article-content {
+        font-family: 'Merriweather', serif;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #374151;
+        margin-bottom: 3rem;
+    }
+
+    body.dark-mode .article-content {
+        color: #e5e7eb;
+    }
+
+    .article-content p {
+        margin-bottom: 1.5rem;
+    }
+
+    .article-content h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        margin: 2rem 0 1rem 0;
+    }
+
+    .article-content h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.4rem;
+        margin: 1.5rem 0 0.75rem 0;
+    }
+
+    .article-content blockquote {
+        border-left: 4px solid #ef4444;
+        padding-left: 1.5rem;
+        margin: 2rem 0;
+        font-style: italic;
+        color: #6b7280;
+    }
+
+    body.dark-mode .article-content blockquote {
+        color: #9ca3af;
+    }
+
+    /* Article Footer with Actions */
+    .article-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem;
+        background: var(--light-bg);
+        border-radius: 0.75rem;
+        margin-bottom: 3rem;
+        border: 1px solid var(--border);
+    }
+
+    body.dark-mode .article-footer {
+        background: #374151;
+        border-color: #4b5563;
+    }
+
+    .article-actions {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        color: #6b7280;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+    }
+
+    body.dark-mode .action-btn {
+        color: #9ca3af;
+    }
+
+    .action-btn:hover {
+        color: #ef4444;
+        transform: scale(1.1);
+    }
+
+    .share-buttons {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .share-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    body.dark-mode .share-btn {
+        border-color: #4b5563;
+    }
+
+    .share-btn:hover {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    /* Comments Section */
+    .comments-section {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--border);
+    }
+
+    body.dark-mode .comments-section {
+        border-top-color: #374151;
+    }
+
+    .comments-section h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Comment Form */
+    .comment-form {
+        background: var(--light-bg);
+        padding: 2rem;
+        border-radius: 0.75rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border);
+    }
+
+    body.dark-mode .comment-form {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .comment-form textarea {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        resize: vertical;
+        min-height: 120px;
+        margin-bottom: 1rem;
+    }
+
+    body.dark-mode .comment-form textarea {
+        background: #374151;
+        border-color: #4b5563;
+        color: #f3f4f6;
+    }
+
+    .comment-form textarea:focus {
+        outline: none;
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .comment-form button {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .comment-form button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+    }
+
+    /* Comment Item */
+    .comment {
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+        animation: fadeInUp 0.5s ease-out;
+    }
+
+    body.dark-mode .comment {
+        border-color: #374151;
+    }
+
+    .comment-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .comment-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .comment-info h4 {
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    body.dark-mode .comment-info h4 {
+        color: #f9fafb;
+    }
+
+    .comment-info p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #9ca3af;
+    }
+
+    .comment-body {
+        color: #374151;
+        line-height: 1.6;
+    }
+
+    body.dark-mode .comment-body {
+        color: #e5e7eb;
+    }
+
+    .comment-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .comment-action {
+        cursor: pointer;
+        color: #6b7280;
+        transition: color 0.2s;
+    }
+
+    body.dark-mode .comment-action {
+        color: #9ca3af;
+    }
+
+    .comment-action:hover {
+        color: #ef4444;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .article-title {
+            font-size: 2rem;
+        }
+
+        .article-image {
+            height: 300px;
+        }
+
+        .article-content {
+            font-size: 1rem;
+        }
+
+        .article-meta {
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .article-stats {
+            margin-left: 0;
+            width: 100%;
+            margin-top: 1rem;
+            justify-content: space-between;
+        }
+
+        .article-footer {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .article-actions {
+            width: 100%;
+            justify-content: space-around;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<article class="post-detail-container">
+    <!-- Article Header -->
+    <header class="article-header">
+        <h1 class="article-title">{{ page.title }}</h1>
+        
+        <div class="article-meta">
+            <div class="author-card">
+                <div class="author-avatar-large">{{ page.author|first|upper }}</div>
+                <div class="author-details">
+                    <h3>{{ page.author }}</h3>
+                    <p>{{ page.time|date:"M d, Y" }}</p>
+                </div>
+            </div>
+            <div class="article-stats">
+                <div>📖 5 min read</div>
+                <div>❤️ 234 likes</div>
+                <div>💬 12 comments</div>
+            </div>
+        </div>
     </header>
-  <body>
 
-  <h1 class="posthead">{{page.title}}</h1>
-    <img src="{% static page.picture %}" alt="Post Image" class="post-image" />
-  <p class="author">
-    {{page.author}}<span class="time"> | {{page.time|timesince}} ago </span>
-      <p ><pre class="content">{{page.content}}</pre></p>
+    <!-- Article Image -->
+    {% if page.picture %}
+        <img src="{% static page.picture %}" alt="{{ page.title }}" class="article-image">
+    {% else %}
+        <div class="article-image" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);"></div>
+    {% endif %}
 
-  </p>
-  </body>
-  <footer>
-    <p>&copy; 2025 Inkter for Authors and Everyone</p>
-  </footer>
-</html>
+    <!-- Article Content -->
+    <div class="article-content">
+        {{ page.content|linebreaks }}
+    </div>
+
+    <!-- Article Footer with Actions -->
+    <div class="article-footer">
+        <div class="article-actions">
+            <button class="action-btn" id="likeBtn">
+                <span id="likeIcon">🤍</span>
+                <span id="likeCount">234</span>
+            </button>
+            <button class="action-btn">
+                <span>💬</span>
+                <span>Comment</span>
+            </button>
+            <button class="action-btn">
+                <span>🔖</span>
+                <span>Save</span>
+            </button>
+        </div>
+        <div class="share-buttons">
+            <button class="share-btn" title="Share on Twitter">𝕏</button>
+            <button class="share-btn" title="Share on Facebook">f</button>
+            <button class="share-btn" title="Share on LinkedIn">in</button>
+            <button class="share-btn" title="Copy link">🔗</button>
+        </div>
+    </div>
+
+    <!-- Comments Section -->
+    <section class="comments-section">
+        <h2>Comments</h2>
+
+        <!-- Comment Form -->
+        <div class="comment-form">
+            <textarea placeholder="Share your thoughts..."></textarea>
+            <button>Post Comment</button>
+        </div>
+
+        <!-- Comments List -->
+        <div id="comments-list">
+            <!-- Example comment -->
+            <div class="comment animate-fade-in-up">
+                <div class="comment-header">
+                    <div class="comment-avatar">J</div>
+                    <div class="comment-info">
+                        <h4>John Smith</h4>
+                        <p>2 days ago</p>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    This is a great article! Really enjoyed reading your perspective on this topic.
+                </div>
+                <div class="comment-actions">
+                    <span class="comment-action">❤️ 5</span>
+                    <span class="comment-action">Reply</span>
+                </div>
+            </div>
+
+            <div class="comment animate-fade-in-up">
+                <div class="comment-header">
+                    <div class="comment-avatar">S</div>
+                    <div class="comment-info">
+                        <h4>Sarah Johnson</h4>
+                        <p>1 day ago</p>
+                    </div>
+                </div>
+                <div class="comment-body">
+                    Couldn't agree more with your points. This deserves more attention.
+                </div>
+                <div class="comment-actions">
+                    <span class="comment-action">❤️ 3</span>
+                    <span class="comment-action">Reply</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</article>
+
+<script>
+    // Like button functionality
+    const likeBtn = document.getElementById('likeBtn');
+    const likeIcon = document.getElementById('likeIcon');
+    const likeCount = document.getElementById('likeCount');
+    let isLiked = false;
+
+    likeBtn.addEventListener('click', () => {
+        isLiked = !isLiked;
+        if (isLiked) {
+            likeIcon.textContent = '❤️';
+            likeCount.textContent = parseInt(likeCount.textContent) + 1;
+        } else {
+            likeIcon.textContent = '🤍';
+            likeCount.textContent = parseInt(likeCount.textContent) - 1;
+        }
+    });
+
+    // Share button functionality
+    document.querySelectorAll('.share-btn').forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+            const urls = {
+                0: `https://twitter.com/intent/tweet?url=${window.location.href}`,
+                1: `https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`,
+                2: `https://www.linkedin.com/sharing/share-offsite/?url=${window.location.href}`,
+                3: 'copy'
+            };
+
+            if (index === 3) {
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copied!');
+            } else {
+                window.open(urls[index], '_blank');
+            }
+        });
+    });
+</script>
+{% endblock %}
