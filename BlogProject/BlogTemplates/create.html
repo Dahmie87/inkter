@@ -1,45 +1,461 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create your post here</title>
-    <link rel="stylesheet" href="{% static 'create.css' %}" />
-  </head>
-  <body>
-    <form action="create" method="post">
-      {% csrf_token %}
-      <p>TITLE:</p>
-      <input
-        type="text"
-        name="newtitle"
-        placeholder="enter the title here"
-      /><br />
-      <p>AUTHOR:</p>
-      <input
-        type="text"
-        name="writer"
-        placeholder="enter the name here"
-      /><br />
-      <p>DESCRIPTION:</p>
-      <select name="tag">
-        <option value="tech">Tech</option>
-        <option value="bus">Business</option>
-        <option value="life">Lifestyle</option>
-        <option value="heal">Health</option>
-        <option value="ent">Entertainment</option>
-        <option value="edu">Education</option>
-        <option value="food">Food</option>
-        <option value="other">Others</option></select
-      ><br />
 
-      <textarea name="postcreated" placeholder="Write your post here"></textarea
-      ><br />
-      <button type="submit">Publish your post</button>
+{% block title %}Write Your Story - Inkter{% endblock %}
+
+{% block extra_css %}
+<style>
+    .create-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .create-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .create-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    body.dark-mode .create-header h1 {
+        color: #f9fafb;
+    }
+
+    .create-header p {
+        color: #6b7280;
+        font-size: 1.1rem;
+    }
+
+    body.dark-mode .create-header p {
+        color: #9ca3af;
+    }
+
+    /* Form */
+    .create-form {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 3rem;
+        border: 1px solid var(--border);
+        animation: fadeInUp 0.8s ease-out;
+        animation-delay: 0.1s;
+    }
+
+    body.dark-mode .create-form {
+        background: #1f2937;
+        border-color: #374151;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+    }
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--primary);
+        font-size: 0.95rem;
+    }
+
+    body.dark-mode .form-group label {
+        color: #f9fafb;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 1rem;
+        transition: all 0.2s;
+        background: white;
+        color: var(--primary);
+    }
+
+    body.dark-mode .form-group input[type="text"],
+    body.dark-mode .form-group textarea,
+    body.dark-mode .form-group select {
+        background: #374151;
+        border-color: #4b5563;
+        color: #f3f4f6;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 300px;
+        font-family: 'Merriweather', serif;
+        line-height: 1.6;
+    }
+
+    .form-hint {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+    }
+
+    body.dark-mode .form-hint {
+        color: #9ca3af;
+    }
+
+    /* Two column layout */
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .form-row-full {
+        grid-column: 1 / -1;
+    }
+
+    /* Rich editor toolbar */
+    .editor-toolbar {
+        background: var(--light-bg);
+        border: 1px solid var(--border);
+        border-bottom: none;
+        border-radius: 0.5rem 0.5rem 0 0;
+        padding: 0.75rem 1rem;
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    body.dark-mode .editor-toolbar {
+        background: #374151;
+        border-color: #4b5563;
+    }
+
+    .toolbar-btn {
+        background: white;
+        border: 1px solid var(--border);
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.2s;
+        color: var(--primary);
+    }
+
+    body.dark-mode .toolbar-btn {
+        background: #1f2937;
+        border-color: #4b5563;
+        color: #f3f4f6;
+    }
+
+    .toolbar-btn:hover {
+        background: #ef4444;
+        border-color: #ef4444;
+        color: white;
+    }
+
+    /* Preview */
+    .preview-section {
+        margin-top: 2rem;
+        padding: 2rem;
+        background: var(--light-bg);
+        border-radius: 0.75rem;
+        border: 1px solid var(--border);
+    }
+
+    body.dark-mode .preview-section {
+        background: #374151;
+        border-color: #4b5563;
+    }
+
+    .preview-section h3 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+
+    .preview-content {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        line-height: 1.6;
+        color: var(--primary);
+    }
+
+    body.dark-mode .preview-content {
+        background: #1f2937;
+        color: #e5e7eb;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+    }
+
+    body.dark-mode .form-actions {
+        border-top-color: #374151;
+    }
+
+    .btn-submit {
+        padding: 0.875rem 2rem;
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1rem;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-draft {
+        padding: 0.875rem 2rem;
+        background: var(--light-bg);
+        border: 1px solid var(--border);
+        color: var(--primary);
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    body.dark-mode .btn-draft {
+        background: #374151;
+        border-color: #4b5563;
+        color: #f3f4f6;
+    }
+
+    .btn-draft:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Character counter */
+    .char-counter {
+        font-size: 0.85rem;
+        color: #9ca3af;
+        text-align: right;
+        margin-top: 0.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .create-form {
+            padding: 1.5rem;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+        .btn-submit,
+        .btn-draft {
+            width: 100%;
+        }
+
+        .create-header h1 {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="create-container">
+    <!-- Header -->
+    <div class="create-header">
+        <h1>Share Your Story</h1>
+        <p>Write something amazing for the world to read</p>
+    </div>
+
+    <!-- Create Form -->
+    <form action="{% url 'create' %}" method="post" class="create-form">
+        {% csrf_token %}
+
+        <!-- Title & Author Row -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="title">Story Title</label>
+                <input 
+                    type="text" 
+                    id="title"
+                    name="newtitle" 
+                    placeholder="Give your story a compelling title..."
+                    required
+                >
+                <p class="form-hint">Make it catchy and descriptive</p>
+            </div>
+
+            <div class="form-group">
+                <label for="author">Your Name</label>
+                <input 
+                    type="text" 
+                    id="author"
+                    name="writer" 
+                    placeholder="Your name or pen name"
+                    required
+                >
+                <p class="form-hint">How should we credit you?</p>
+            </div>
+        </div>
+
+        <!-- Category Selection -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select name="tag" id="category" required>
+                    <option value="">Select a category...</option>
+                    <option value="tech">🔧 Technology</option>
+                    <option value="bus">💼 Business</option>
+                    <option value="life">🌟 Lifestyle</option>
+                    <option value="heal">❤️ Health</option>
+                    <option value="ent">🎬 Entertainment</option>
+                    <option value="edu">📚 Education</option>
+                    <option value="food">🍽️ Food</option>
+                    <option value="other">✨ Other</option>
+                </select>
+                <p class="form-hint">Choose what your story is about</p>
+            </div>
+
+            <div class="form-group">
+                <label for="image">Cover Image URL (optional)</label>
+                <input 
+                    type="text" 
+                    id="image"
+                    placeholder="Paste image URL or leave blank"
+                >
+                <p class="form-hint">A good image helps your story stand out</p>
+            </div>
+        </div>
+
+        <!-- Rich Text Editor -->
+        <div class="form-group form-row-full">
+            <label for="content">Your Story</label>
+            
+            <!-- Toolbar -->
+            <div class="editor-toolbar">
+                <button type="button" class="toolbar-btn" title="Bold">
+                    <strong>B</strong>
+                </button>
+                <button type="button" class="toolbar-btn" title="Italic">
+                    <em>I</em>
+                </button>
+                <button type="button" class="toolbar-btn" title="Underline">
+                    <u>U</u>
+                </button>
+                <div style="width: 1px; background: var(--border); margin: 0 0.5rem;"></div>
+                <button type="button" class="toolbar-btn" title="Heading">
+                    H1
+                </button>
+                <button type="button" class="toolbar-btn" title="Heading 2">
+                    H2
+                </button>
+                <button type="button" class="toolbar-btn" title="Quote">
+                    "
+                </button>
+                <button type="button" class="toolbar-btn" title="Link">
+                    🔗
+                </button>
+            </div>
+
+            <!-- Textarea -->
+            <textarea 
+                id="content"
+                name="postcreated" 
+                placeholder="Start writing your story here... You can format it with the toolbar above."
+                required
+            ></textarea>
+            
+            <div class="char-counter">
+                <span id="charCount">0</span> characters
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="button" class="btn-draft">Save as Draft</button>
+            <button type="submit" class="btn-submit">Publish Story</button>
+        </div>
     </form>
-    <footer>
-      <p>&copy; 2025 Inkter for Authors and Everyone</p>
-    </footer>
-  </body>
-</html>
+
+    <!-- Preview Section -->
+    <div class="preview-section" style="margin-top: 3rem;">
+        <h3>👀 Preview</h3>
+        <div class="preview-content">
+            <h2 id="previewTitle" style="margin-bottom: 1rem;">Your story title appears here</h2>
+            <p id="previewContent" style="color: #9ca3af;">Start typing to see your story preview...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Live preview
+    const titleInput = document.getElementById('title');
+    const contentInput = document.getElementById('content');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewContent = document.getElementById('previewContent');
+    const charCount = document.getElementById('charCount');
+
+    titleInput.addEventListener('input', () => {
+        previewTitle.textContent = titleInput.value || 'Your story title appears here';
+    });
+
+    contentInput.addEventListener('input', () => {
+        previewContent.textContent = contentInput.value.substring(0, 200) + 
+            (contentInput.value.length > 200 ? '...' : '') || 
+            'Start typing to see your story preview...';
+        charCount.textContent = contentInput.value.length;
+    });
+
+    // Toolbar functionality (basic)
+    document.querySelectorAll('.toolbar-btn').forEach((btn, index) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const ta = contentInput;
+            const start = ta.selectionStart;
+            const end = ta.selectionEnd;
+            const selected = ta.value.substring(start, end);
+
+            let newText = '';
+            if (index === 0) newText = `**${selected}**`; // Bold
+            else if (index === 1) newText = `*${selected}*`; // Italic
+            else if (index === 2) newText = `__${selected}__`; // Underline
+            else if (index === 4) newText = `## ${selected}`; // Heading 2
+            else if (index === 5) newText = `\n> ${selected}\n`; // Quote
+            else if (index === 6) newText = `[link](url)`; // Link
+
+            ta.value = ta.value.substring(0, start) + newText + ta.value.substring(end);
+            ta.dispatchEvent(new Event('input'));
+        });
+    });
+</script>
+{% endblock %}
