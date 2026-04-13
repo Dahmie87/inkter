@@ -1,1 +1,361 @@
-feat: add base.html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inkter - Share Your Stories{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1f2937;
+            --accent: #ef4444;
+            --light-bg: #f9fafb;
+            --dark-bg: #111827;
+            --border: #e5e7eb;
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--light-bg);
+            color: var(--primary);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: var(--dark-bg);
+            color: #f3f4f6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+
+        .page-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-family: 'Merriweather', serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        body.dark-mode .subtitle {
+            color: #9ca3af;
+        }
+
+        /* Smooth animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .animate-slide-in-down {
+            animation: slideInDown 0.3s ease-out;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            animation: slideInDown 0.3s ease-out;
+        }
+
+        body.dark-mode header {
+            background: #1f2937;
+            border-bottom-color: #374151;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 2px;
+        }
+
+        body.dark-mode .nav-links a {
+            color: #e5e7eb;
+        }
+
+        .nav-links a:hover {
+            color: #ef4444;
+            border-bottom-color: #ef4444;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        body.dark-mode .search-box {
+            background: #374151;
+            border-color: #4b5563;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .btn-secondary:hover {
+            background: #fef2f2;
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .theme-toggle {
+            background: var(--light-bg);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: #374151;
+            border-color: #4b5563;
+        }
+
+        .theme-toggle:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* Main container */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        body.dark-mode footer {
+            background: #0f1419;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .page-heading {
+                font-size: 2.5rem;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header>
+        <div class="nav-container">
+            <a href="{% url 'index' %}" class="logo">Inkter</a>
+            
+            <div class="nav-center">
+                <ul class="nav-links">
+                    <li><a href="{% url 'index' %}">Discover</a></li>
+                    <li><a href="#trending">Trending</a></li>
+                    <li><a href="#following">Following</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-right">
+                <input type="text" class="search-box" placeholder="Search stories...">
+                <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <a href="{% url 'create' %}" class="btn btn-primary">Write</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Inkter for Authors and Everyone. All rights reserved.</p>
+            <p style="font-size: 0.9rem; margin-top: 1rem; opacity: 0.8;">Share your stories, inspire the world</p>
+        </div>
+    </footer>
+
+    <script>
+        // Dark mode toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const html = document.documentElement;
+        const body = document.body;
+
+        // Check for saved preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeIcon.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeIcon.textContent = isDark ? '☀️' : '🌙';
+        });
+
+        // Add animation to page on load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.animate-fade-in-up').forEach((el, i) => {
+                el.style.animationDelay = `${i * 0.1}s`;
+            });
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
